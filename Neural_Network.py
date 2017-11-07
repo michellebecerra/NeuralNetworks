@@ -9,7 +9,7 @@ import cv2
 
 def main():
 	# read a pgm file
-	img = cv2.imread("gestures/A/A_down_1.pgm", -1)
+	img = cv2.imread("gestures/M/M_up_2.pgm", cv2.IMREAD_GRAYSCALE)
 	print img
 
 if __name__ == "__main__":
