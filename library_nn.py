@@ -1,4 +1,4 @@
-from sknn.mlp import Classifier, Layer
+from sklearn.neural_network import MLPClassifier
 import random
 import numpy as np
 import cv2
@@ -37,14 +37,18 @@ for line in t.readlines():
 		labels_test.append([0])
 
 test_set = np.array(test_matrix) #shape = 184x960
-nn = Classifier(
-    layers=[
-        Layer("Sigmoid", units=100),
-        Layer("Linear")],
-    learning_rate=0.1,
-    n_iter=1000)
-nn.fit(train_set, labels)
 
-y_valid = nn.predict(test_set)
-print y_valid
-score = nn.score(test_set, labels)
+X_train = train_set
+y_train = labels
+X_test = test_set
+y_test = np.array(labels_test)
+
+mlp = MLPClassifier(solver='sgd', hidden_layer_sizes=(100,),learning_rate='constant',learning_rate_init=.1, max_iter=1000)
+mlp.fit(X_train, y_train)  
+print mlp.predict_proba(X_test)
+print("Training set score: %f" % mlp.score(X_train, y_train))
+print("Test set score: %f" % mlp.score(X_test, y_test))
+                       
+
+
+
