@@ -8,7 +8,7 @@ import numpy as np
 import cv2
 # ==============Back Propagation Algorithm==================================
 
-#Predicts the down gester by training and testing the gesters by a
+#Predicts the down gesturs by training and testing the gestures by a
 #feed forward neural network
 def main():
 
@@ -22,7 +22,7 @@ def main():
 		file_path = ''.join(values_as_strings).rstrip('\n')
 		img = cv2.imread(file_path, -1)
 		result_matrix.append(img.flatten())
-
+	#Classify the train data
 		if "down" in file_path:
 			labels.append([1])
 		else:
@@ -43,7 +43,7 @@ def main():
 	#train the neural network with train set
 	weights_output, weights_hidden = NN(train_set,labels,weights_hidden_layer, weights_output_layer)
 
-	#test
+	#Test
 	t = open("downgesture_test.list", 'r')
 	test_matrix = []
 	labels_test = []
@@ -70,7 +70,7 @@ def main():
 
 	#calculating accuracy of predictions
 	percent_accuracy = accuracy(labels_test,computed_labels)
-	print "Accuracy:1", percent_accuracy,'%'
+	print "Accuracy: ", percent_accuracy,'%'
 
 #calculates the percentage of correctly predicted labels
 def accuracy(true_labels, predictions):
@@ -81,7 +81,7 @@ def accuracy(true_labels, predictions):
 
 	return float((correct/len(true_labels)))*100.0
 
-#computes the labels given weights
+#computes the predictions given weights from the trained data
 def forward_propagation(x,wh,wo,y):
 	hiddenLayerInputs = np.dot(x,wh) #shape 184x100
 	hiddenLayerOutput = sigmoid(np.array(hiddenLayerInputs)) #184x100
@@ -99,14 +99,14 @@ def NN(x, y, wh, wo):
 	hiddenLayerInput = []
 	hiddenLayerOutput = []
 	while(epochs > 0):
-		#1-Forward
+		#1-Feed-Forward
 		hiddenLayerInputs = np.dot(x,wh) #shape 184x100
 		hiddenLayerOutput = sigmoid(np.array(hiddenLayerInputs)) #184x100
 		outputLayerInputs = np.dot(hiddenLayerOutput,wo) #shape 184x1
 		outputLayerOutput = sigmoid(np.array(outputLayerInputs)) #184x1
 		outputLayerOutput = np.array(outputLayerOutput)
 
-		#2-Back propagation
+		#2-Back-Propagation
 		error = squaredError(y, outputLayerOutput)
 		deltaOutputLayer = der_sig(outputLayerOutput) #184x1
 		deltaOutput = 2*error*deltaOutputLayer
@@ -114,7 +114,7 @@ def NN(x, y, wh, wo):
 		deltaHiddenLayer = der_sig(hiddenLayerOutput) #184x100
 		deltaHidden = errorHiddenLayer * deltaHiddenLayer
 
-		#3-error		
+		#3-Weight Scale Error Update		
 		wo = np.subtract(wo,((hiddenLayerOutput.T.dot(deltaOutput))*eta))
 		wh = np.subtract(wh,((x.T.dot(deltaHidden))*eta))
 
